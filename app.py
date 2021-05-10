@@ -10,29 +10,21 @@ import matplotlib
 
 DATA_URL=("titanic.csv")
 
-st.title("OrthoViz : Interactive visualization of patients data")
+st.title("TitaViz")
 st.markdown("")
-st.markdown("This application is a Streamlit dashboard that can me used to analyse motor vehicle collisions in NYC")
+st.markdown("This application is a Streamlit dashboard that can be used to visualize and analyse the famous titanic data.")
 
 #@st.cache(persist=True)
 
 data = pd.read_csv(DATA_URL)
 
 
-
-
-st.header("Where are the most people injured in NYC?")
-
-
-if st.checkbox("Show Raw Data", False):
+if st.checkbox("Show Raw Data", True):
     st.subheader("Raw Data")
     st.write(data)
 
-#st.write(data.describe())
-#st.write(data.describe(include=['O']))
-bla = st.selectbox('Affected type of people', ["Embarked","Sex","Pclass"])
-st.write(data[[bla, 'Survived']].groupby([bla], as_index=False).mean().sort_values(by='Survived', ascending=False))
 
+st.header("How are the passengers distributed?")
 
 dfg=data.groupby('Sex').count().reset_index()
 dfg=dfg.rename(columns={"PassengerId": "Passengers"})
@@ -52,10 +44,21 @@ Nbins = st.slider("Bins",2,42)
 fig = px.histogram(data, x="Age", color="Sex", marginal="rug",nbins=Nbins-1,hover_data=data.columns)
 st.write(fig)
 
+st.header("Who is most likely to survive?")
+
+
+#st.write(data.describe())
+#st.write(data.describe(include=['O']))
+bla = st.selectbox('Type of passengers', ["Embarked","Sex","Pclass"])
+st.write(data[[bla, 'Survived']].groupby([bla], as_index=False).mean().sort_values(by='Survived', ascending=False))
+
+
+
+st.header("Is age a significative factor?")
 
 #fig = px.bar(dfg)
 #st.write(fig)
 
-select = st.selectbox('Affected type of people', ["Survived","Sex","Pclass"])
+select = st.selectbox('Type of passengers', ["Survived","Sex","Pclass"])
 fig = px.box(data, x=select, y="Age", points="all")
 st.write(fig)
